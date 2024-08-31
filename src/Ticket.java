@@ -132,6 +132,18 @@ public class Ticket {
             throw new IllegalArgumentException("Price must be a non-negative value.");
         }
     }
+    @Override
+    public String toString() {
+        return "Ticket [ID=" + id +
+                ", Concert Hall=" + concertHall +
+                ", Event Code=" + eventCode +
+                ", Time=" + time +
+                ", Is Promo=" + isPromo +
+                ", Stadium Sector=" + stadiumSector +
+                ", Max Backpack Weight=" + maxBackpackWeight + " kg" +
+                ", Price=" + price +
+                ", Creation Time=" + creationTime + "]";
+    }
 
 }
 
