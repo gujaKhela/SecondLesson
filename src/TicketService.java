@@ -14,6 +14,14 @@ public class TicketService {
         service.storageOfTickets[0]= emptyTicket;
         service.storageOfTickets[1] = fullTicket;
         service.storageOfTickets[2]= limitedTicket;
+    }
 
+    public Ticket returnTicketById(String id) {
+        for (Ticket ticket : storageOfTickets) {
+            if (ticket != null && ticket.getID().equals(id)) {
+                return ticket;
+            }
+        }
+        return null;
     }
 }
