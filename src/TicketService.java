@@ -1,4 +1,5 @@
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class TicketService {
 
@@ -30,6 +31,15 @@ public class TicketService {
         service.storageOfTickets[7]= limitedTicketTwo;
         service.storageOfTickets[8]= limitedTicketThree;
         service.storageOfTickets[9]= limitedTicketFour;
+
+        List<Ticket> foundTickets = service.getTicketsByStadiumSector('A');
+        if (!foundTickets.isEmpty()) {
+            for (Ticket ticket: foundTickets) {
+                System.out.println(ticket);
+            }
+        } else {
+            System.out.println("There are no tickets by given sector code");
+        }
     }
 
     private Ticket returnTicketById(String id) {
@@ -39,5 +49,17 @@ public class TicketService {
             }
         }
         return null;
+    }
+
+    private List<Ticket> getTicketsByStadiumSector(char stadiumSector) {
+        List<Ticket> tickets = new ArrayList<>();
+
+        for (Ticket ticket: storageOfTickets) {
+            if (ticket!=null && ticket.getStadiumSector()==stadiumSector) {
+                tickets.add(ticket);
+            }
+        }
+
+        return tickets;
     }
 }
