@@ -1,8 +1,7 @@
 import java.time.Instant;
 
-public class Ticket {
+public class Ticket extends Identifiable {
 
-    private String id;
     private String concertHall;
     private String eventCode;
     private long time;
@@ -12,8 +11,6 @@ public class Ticket {
 
     private double price;
     private final long creationTime;
-
-
 
     public  Ticket() {
         this.creationTime = Instant.now().getEpochSecond();
@@ -40,17 +37,6 @@ public class Ticket {
         return this.creationTime;
     }
 
-    public String getID() {
-        return this.id;
-    }
-
-    private void setId(String id) {
-        if (id != null && !id.isBlank() && id.length() <= 4) {
-            this.id = id;
-        } else {
-            throw new IllegalArgumentException("ID should not be empty and must be 4 digits or fewer.");
-        }
-    }
 
     public String getConcertHall() {
         return this.concertHall;
@@ -134,7 +120,7 @@ public class Ticket {
     }
     @Override
     public String toString() {
-        return "Ticket [ID=" + id +
+        return "Ticket [ID=" + getId() +
                 ", Concert Hall=" + concertHall +
                 ", Event Code=" + eventCode +
                 ", Time=" + time +

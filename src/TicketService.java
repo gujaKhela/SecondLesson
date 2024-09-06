@@ -44,7 +44,7 @@ public class TicketService {
 
     private Ticket returnTicketById(String id) {
         for (Ticket ticket : storageOfTickets) {
-            if (ticket != null && ticket.getID().equals(id)) {
+            if (ticket != null && ticket.getId().equals(id)) {
                 return ticket;
             }
         }
@@ -59,7 +59,6 @@ public class TicketService {
                 tickets.add(ticket);
             }
         }
-
         return tickets;
     }
 }
