@@ -12,4 +12,8 @@ public abstract class Identifiable {
             throw new IllegalArgumentException("ID should not be empty and must be 4 digits or fewer.");
         }
     }
+
+    public void print() {
+        System.out.println(this.toString());
+    }
 }

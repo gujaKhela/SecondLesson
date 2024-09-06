@@ -8,21 +8,19 @@ public class Ticket extends Identifiable {
     private boolean isPromo;
     private char stadiumSector;
     private double maxBackpackWeight;
-
     private double price;
     private final long creationTime;
 
-    public  Ticket() {
+    public Ticket() {
         this.creationTime = Instant.now().getEpochSecond();
     }
 
     public Ticket(String id, String concertHall, String eventCode, long time, boolean isPromo, char stadiumSector, double maxBackpackWeight, double price) {
         this(concertHall, eventCode, time);
-
         setId(id);
         setPromo(isPromo);
         setStadiumSector(stadiumSector);
-        setMaxBackpackWeight(maxBackpackWeight) ;
+        setMaxBackpackWeight(maxBackpackWeight);
         setPrice(price);
     }
 
@@ -37,32 +35,29 @@ public class Ticket extends Identifiable {
         return this.creationTime;
     }
 
-
     public String getConcertHall() {
         return this.concertHall;
     }
 
     private void setConcertHall(String concertHall) {
-        if(concertHall.length() <= 10) {
+        if (concertHall.length() <= 10) {
             this.concertHall = concertHall;
-        }else {
+        } else {
             throw new IllegalArgumentException("Concert hall name should be 10 characters or fewer.");
         }
     }
-
 
     public String getEventCode() {
         return this.eventCode;
     }
 
     private void setEventCode(String eventCode) {
-
-            if (eventCode.length() == 3) {
-                this.eventCode = eventCode;
-            } else {
-                throw new IllegalArgumentException("Event code should be 3 characters long");
-            }
+        if (eventCode.length() == 3) {
+            this.eventCode = eventCode;
+        } else {
+            throw new IllegalArgumentException("Event code should be 3 characters long");
         }
+    }
 
     public char getStadiumSector() {
         return this.stadiumSector;
@@ -70,7 +65,7 @@ public class Ticket extends Identifiable {
 
     private void setStadiumSector(char stadiumSector) {
         char stadiumSectorToUpper = Character.toUpperCase(stadiumSector);
-        if(stadiumSectorToUpper == 'A' || stadiumSectorToUpper == 'B' || stadiumSectorToUpper == 'C') {
+        if (stadiumSectorToUpper == 'A' || stadiumSectorToUpper == 'B' || stadiumSectorToUpper == 'C') {
             this.stadiumSector = stadiumSector;
         } else {
             throw new IllegalArgumentException("Stadium sector should be A, B, or C.");
@@ -82,9 +77,9 @@ public class Ticket extends Identifiable {
     }
 
     private void setTime(long time) {
-        if(time >= 0) {
+        if (time >= 0) {
             this.time = time;
-        }else {
+        } else {
             throw new IllegalArgumentException("Time must be a non-negative Unix timestamp.");
         }
     }
@@ -100,6 +95,7 @@ public class Ticket extends Identifiable {
     public double getMaxBackpackWeight() {
         return this.maxBackpackWeight;
     }
+
     private void setMaxBackpackWeight(double maxBackpackWeight) {
         if (maxBackpackWeight >= 0) {
             this.maxBackpackWeight = maxBackpackWeight;
@@ -111,6 +107,7 @@ public class Ticket extends Identifiable {
     public double getPrice() {
         return this.price;
     }
+
     private void setPrice(double price) {
         if (price >= 0) {
             this.price = price;
@@ -118,6 +115,7 @@ public class Ticket extends Identifiable {
             throw new IllegalArgumentException("Price must be a non-negative value.");
         }
     }
+
     @Override
     public String toString() {
         return "Ticket [ID=" + getId() +
@@ -131,5 +129,7 @@ public class Ticket extends Identifiable {
                 ", Creation Time=" + creationTime + "]";
     }
 
+    public String getTicketDetails() {
+        return this.toString();
+    }
 }
-
