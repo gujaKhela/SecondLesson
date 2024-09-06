@@ -19,8 +19,6 @@ public class TicketService {
         var limitedTicketThree = new Ticket("Main hall", "424", 3456789L);
         var limitedTicketFour = new Ticket("Main hall", "524", 4456789L);
 
-
-
         service.storageOfTickets[0]= emptyTicket;
         service.storageOfTickets[1] = fullTicketOne;
         service.storageOfTickets[2] = fullTicketTwo;
@@ -60,5 +58,13 @@ public class TicketService {
             }
         }
         return tickets;
+    }
+
+    public void share(Ticket ticket, String phone) {
+        System.out.println("Ticket shared via phone: " + phone);
+    }
+
+    public void share(Ticket ticket, String phone, String email) {
+        System.out.println("Ticket shared via phone and email: " + phone + ", " + email);
     }
 }
