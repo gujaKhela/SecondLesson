@@ -1,7 +1,10 @@
+import java.lang.reflect.Field;
 import java.time.Instant;
+import java.util.Objects;
 
 public class Ticket extends Identifiable {
 
+    @NullableWarning
     private String concertHall;
     private String eventCode;
     private long time;
@@ -13,6 +16,7 @@ public class Ticket extends Identifiable {
 
     public Ticket() {
         this.creationTime = Instant.now().getEpochSecond();
+        checkNullableWarnings(); // Check nullable warnings in the constructor
     }
 
     public Ticket(String id, String concertHall, String eventCode, long time, boolean isPromo, char stadiumSector, double maxBackpackWeight, double price) {
@@ -117,6 +121,19 @@ public class Ticket extends Identifiable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return Objects.equals(getId(), ticket.getId()); // Compare IDs
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId()); // Generate hash code based on ID
+    }
+
+    @Override
     public String toString() {
         return "Ticket [ID=" + getId() +
                 ", Concert Hall=" + concertHall +
@@ -131,5 +148,22 @@ public class Ticket extends Identifiable {
 
     public String getTicketDetails() {
         return this.toString();
+    }
+
+    protected void checkNullableWarnings() {
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(NullableWarning.class)) {
+                field.setAccessible(true);
+                try {
+                    Object value = field.get(this);
+                    if (value == null) {
+                        System.out.println("Variable [" + field.getName() + "] is null in [" + this.getClass().getSimpleName() + "]!");
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
