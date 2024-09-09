@@ -46,7 +46,8 @@ public class TicketService implements Shareable {
 
 
         ((Client) client).getTicket();
-        ((Admin) admin).checkTicket();
+        boolean isValid = ((Admin)admin).checkTicket(fullTicketOne);
+        System.out.println("Ticket valid: " + isValid);
 
         // Retrieve and print tickets by stadium sector
         List<Ticket> foundTickets = service.getTicketsByStadiumSector('A');

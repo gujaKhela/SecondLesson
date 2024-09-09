@@ -4,7 +4,13 @@ public class Admin implements User {
         System.out.println("I am an admin");
     }
 
-    public void checkTicket() {
-        System.out.println("Admin: Checking ticket.");
+    public boolean checkTicket(Ticket ticket) {
+        if(ticket.getEventCode() != null && !ticket.getEventCode().isEmpty()) {
+            System.out.println("Admin: Ticket is valid.");
+            return true;
+        }else {
+            System.out.println("Admin: Ticket is invalid.");
+            return false;
+        }
     }
 }
