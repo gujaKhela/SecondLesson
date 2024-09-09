@@ -15,8 +15,8 @@ public class Ticket extends Identifiable {
     private final long creationTime;
 
     public Ticket() {
+        NullableWarningChecker.check(this);
         this.creationTime = Instant.now().getEpochSecond();
-        checkNullableWarnings(); // Check nullable warnings in the constructor
     }
 
     public Ticket(String id, String concertHall, String eventCode, long time, boolean isPromo, char stadiumSector, double maxBackpackWeight, double price) {
@@ -135,7 +135,7 @@ public class Ticket extends Identifiable {
 
     @Override
     public String toString() {
-        return "Ticket [ID=" + getId() +
+        return "Ticket [ID=" + id +
                 ", Concert Hall=" + concertHall +
                 ", Event Code=" + eventCode +
                 ", Time=" + time +
@@ -150,20 +150,4 @@ public class Ticket extends Identifiable {
         return this.toString();
     }
 
-    protected void checkNullableWarnings() {
-        Field[] fields = this.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(NullableWarning.class)) {
-                field.setAccessible(true);
-                try {
-                    Object value = field.get(this);
-                    if (value == null) {
-                        System.out.println("Variable [" + field.getName() + "] is null in [" + this.getClass().getSimpleName() + "]!");
-                    }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 }

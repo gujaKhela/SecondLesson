@@ -60,7 +60,7 @@ public class TicketService implements Shareable {
         }
     }
 
-    private Ticket returnTicketById(String id) {
+    protected Ticket returnTicketById(String id) {
         for (Ticket ticket : storageOfTickets) {
             if (ticket != null && ticket.getId().equals(id)) {
                 return ticket;

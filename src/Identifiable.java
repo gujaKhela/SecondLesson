@@ -1,7 +1,7 @@
 import java.lang.reflect.Field;
 
 public abstract class Identifiable {
-    private String id;
+    protected String id;
 
     public String getId() {
         return id;
@@ -19,20 +19,4 @@ public abstract class Identifiable {
         System.out.println(this.toString());
     }
 
-    protected void checkNullableWarnings() {
-        Field[] fields = this.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(NullableWarning.class)) {
-                field.setAccessible(true);
-                try {
-                    Object value = field.get(this);
-                    if (value == null) {
-                        System.out.println("Variable [" + field.getName() + "] is null in [" + this.getClass().getSimpleName() + "]!");
-                    }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 }
