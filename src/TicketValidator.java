@@ -9,31 +9,21 @@ public class TicketValidator {
         boolean isValid = true;
 
         // Validate startDate
-        if (ticket.getStartDate() != null && ticket.getStartDate().isAfter(LocalDate.now())) {
-            System.out.println("Error: Start date can't be in the future.");
-            startDateViolationCount++;
+        if (!isValidStartDate(ticket.getStartDate())) {
             isValid = false;
         }
 
         // Validate price
-        if (ticket.getPrice() <= 0 || ticket.getPrice() % 2 != 0) {
-            System.out.println("Error: Price must be non-zero and even.");
-            priceViolationCount++;
+        if (!isValidPrice(ticket.getPrice())) {
             isValid = false;
         }
 
         // Validate ticketType
-        if (ticket.getTicketType() == null || !isValidTicketType(ticket.getTicketType())) {
-            System.out.println("Error: Invalid ticket type.");
-            ticketTypeViolationCount++;
+        if (!isValidTicketType(ticket.getTicketType())) {
             isValid = false;
         }
 
         return isValid;
-    }
-
-    private boolean isValidTicketType(String ticketType) {
-        return ticketType != null && (ticketType.equals("DAY") || ticketType.equals("WEEK") || ticketType.equals("MONTH") || ticketType.equals("YEAR"));
     }
 
     public String getMostPopularViolation() {
@@ -44,5 +34,32 @@ public class TicketValidator {
         } else {
             return "ticket type";
         }
+    }
+
+    private boolean isValidStartDate(LocalDate startDate) {
+        if (startDate != null && startDate.isAfter(LocalDate.now())) {
+            System.out.println("Error: Start date can't be in the future.");
+            startDateViolationCount++;
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidPrice(double price) {
+        if (price <= 0 || price % 2 != 0) {
+            System.out.println("Error: Price must be non-zero and even.");
+            priceViolationCount++;
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidTicketType(String ticketType) {
+        if (ticketType == null || !(ticketType.equals("DAY") || ticketType.equals("WEEK") || ticketType.equals("MONTH") || ticketType.equals("YEAR"))) {
+            System.out.println("Error: Invalid ticket type.");
+            ticketTypeViolationCount++;
+            return false;
+        }
+        return true;
     }
 }

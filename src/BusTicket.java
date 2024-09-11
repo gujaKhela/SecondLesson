@@ -13,8 +13,19 @@ public class BusTicket {
         this.price = (price != null) ? price : 0.0;
     }
 
-    public String getTicketClass() { return ticketClass; }
-    public String getTicketType() { return ticketType; }
-    public LocalDate getStartDate() { return startDate; }
-    public double getPrice() { return price; }
+    public String getTicketClass() {
+        return ticketClass;
+    }
+
+    public String getTicketType() {
+        return ticketType;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public double getPrice() {
+        return price;
+    }
 }
