@@ -31,22 +31,16 @@ public class TicketReader {
                             String value = keyValue[1].trim();
 
                             switch (key) {
-                                case "ticketClass":
-                                    ticketClass = !value.equals("null") ? value : null;
-                                    break;
-                                case "ticketType":
-                                    ticketType = !value.equals("null") ? value : null;
-                                    break;
-                                case "startDate":
-                                    startDateStr = !value.equals("null") ? value : null;
-                                    break;
-                                case "price":
+                                case "ticketClass" -> ticketClass = !value.equals("null") ? value : null;
+                                case "ticketType" -> ticketType = !value.equals("null") ? value : null;
+                                case "startDate" -> startDateStr = !value.equals("null") ? value : null;
+                                case "price" -> {
                                     try {
                                         price = !value.equals("null") && !value.isEmpty() ? Double.parseDouble(value) : null;
                                     } catch (NumberFormatException e) {
                                         System.out.println("Invalid price format: " + value);
                                     }
-                                    break;
+                                }
                             }
                         }
                     }
