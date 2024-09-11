@@ -6,6 +6,27 @@ public class TicketService implements Shareable {
     private Ticket[] storageOfTickets = new Ticket[10];
 
     public static void main(String[] args) {
+
+        // Bus Ticket Validation Code
+        TicketReader reader = new TicketReader();
+        TicketValidator validator = new TicketValidator();
+
+        List<BusTicket> tickets = reader.readTicketsFromFile("C:/Users/elguj/Desktop/SecondLesson/src/tickets.txt");
+
+        int totalTickets = tickets.size();
+        int validTickets = 0;
+
+        for (BusTicket ticket : tickets) {
+            if (validator.validateTicket(ticket)) {
+                validTickets++;
+            }
+        }
+
+        System.out.println("Total = " + totalTickets);
+        System.out.println("Valid = " + validTickets);
+        System.out.println("Most popular violation = " + validator.getMostPopularViolation());
+
+
         TicketService service = new TicketService();
 
         // Create tickets
@@ -32,18 +53,13 @@ public class TicketService implements Shareable {
         service.storageOfTickets[8] = limitedTicketThree;
         service.storageOfTickets[9] = limitedTicketFour;
 
-
         service.share(String.valueOf(fullTicketOne), "123-456-7890");
-
-
 
         User client = new Client();
         User admin = new Admin();
 
-
         client.printRole();
         admin.printRole();
-
 
         ((Client) client).getTicket();
         boolean isValid = ((Admin)admin).checkTicket(fullTicketOne);
