@@ -1,4 +1,5 @@
 ### IntelliJ IDEA ###
+/.idea/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
@@ -22,12 +23,11 @@ bin/
 /nbdist/
 /.nb-gradle/
 
-## Idea Configuration##
-/.idea/
-/.idea/vcs.xml
-
 ### VS Code ###
 .vscode/
 
 ### Mac OS ###
 .DS_Store
+
+### Build directories ###
+target/
