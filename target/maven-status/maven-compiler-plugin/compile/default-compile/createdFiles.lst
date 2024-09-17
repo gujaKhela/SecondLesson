@@ -1,0 +1,14 @@
+com\example\Client.class
+com\example\BusTicket.class
+com\example\User.class
+com\example\Shareable.class
+com\example\CustomArrayList.class
+com\example\CustomHashSet.class
+com\example\NullableWarning.class
+com\example\NullableWarningChecker.class
+com\example\TicketValidator.class
+com\example\Identifiable.class
+com\example\Ticket.class
+com\example\TicketService.class
+com\example\TicketReader.class
+com\example\Admin.class
