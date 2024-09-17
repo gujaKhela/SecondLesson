@@ -1,3 +1,6 @@
+package com.example;
+import com.example.Ticket;
+
 public class Client implements User {
     @Override
     public void printRole() {

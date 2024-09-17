@@ -1,3 +1,7 @@
+package com.example;
+
+import com.example.Ticket;
+
 public class Admin implements User {
     @Override
     public void printRole() {

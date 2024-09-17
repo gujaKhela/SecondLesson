@@ -1,3 +1,6 @@
+package com.example;
+import com.example.BusTicket;
+
 import java.time.LocalDate;
 
 public class TicketValidator {

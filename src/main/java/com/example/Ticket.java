@@ -1,3 +1,7 @@
+package com.example;
+import com.example.Identifiable;
+import com.example.NullableWarning;
+import com.example.NullableWarningChecker;
 import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.Objects;
