@@ -1,10 +1,30 @@
 package com.example;
-import com.example.Ticket;
 
 public class Client implements User {
+    private String name;
+    private int id;
+
+
+    public Client(String name, int id) {
+        this.name=name;
+        this.id=id;
+    }
+
+    public Client() {};
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
     @Override
     public void printRole() {
         System.out.println("I am a client");
+    }
+
+    @Override
+    public String getRole() {
+        return "client";
     }
 
     public void getTicket() {

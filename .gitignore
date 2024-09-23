@@ -31,3 +31,7 @@ bin/
 
 ### Build directories ###
 target/
+
+
+## env ##
+.env
