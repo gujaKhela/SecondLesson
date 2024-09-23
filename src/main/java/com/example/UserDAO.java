@@ -6,11 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAO {
+    private static final String SAVE_USER_SQL= "INSERT INTO app_user(name, role) VALUES (?, ?)";
+    private static final String FETCH_USER_SQL= "SELECT * FROM app_user WHERE id=?";
+    private static final String DELETE_USER_SQL = "DELETE FROM app_user WHERE id = ?";
 
     public void saveUser(User user) throws SQLException {
-        String sql = "INSERT INTO app_user(name, role) VALUES (?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(SAVE_USER_SQL)) {
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getRole());  // Save role (admin/client)
             stmt.executeUpdate();
@@ -18,9 +20,8 @@ public class UserDAO {
     }
 
     public User fetchUserById(int id) throws SQLException {
-        String sql = "SELECT * FROM app_user WHERE id=?";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(FETCH_USER_SQL)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -38,9 +39,8 @@ public class UserDAO {
         return null;
     }
     public void deleteUserById(int id) throws SQLException {
-        String sql = "DELETE FROM app_user WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(DELETE_USER_SQL)) {
             stmt.setInt(1, id);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
