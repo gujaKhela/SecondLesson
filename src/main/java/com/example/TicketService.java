@@ -1,5 +1,8 @@
 package com.example;
 
+import org.hibernate.HibernateException;
+import org.hibernate.sql.Update;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,25 +74,28 @@ public class TicketService implements Shareable {
     }
 
     private void handleDatabaseOperations() {
+        UserDAO userDAO = null;
+        TicketDAO ticketDAO = null;
+
         try {
-            UserDAO userDAO = new UserDAO();
-            TicketDAO ticketDAO = new TicketDAO();
+            userDAO = new UserDAO();
+            ticketDAO = new TicketDAO();
 
             // Test saving and retrieving users
-            User client = new Client("John Doe", 1);
+            User client = new Client("guja");
             userDAO.saveUser(client);
             System.out.println("Saved new client: " + client.getName());
 
-            User admin = new Admin("Jane Admin", 2);
+            User admin = new Admin("guja 2");
             userDAO.saveUser(admin);
             System.out.println("Saved new admin: " + admin.getName());
 
-            User fetchedUser = userDAO.fetchUserById(1);
+            User fetchedUser = userDAO.fetchUserById(4);
             if (fetchedUser != null) {
                 System.out.println("Fetched user: " + fetchedUser.getName() + " with role: " + fetchedUser.getRole());
             }
 
-            userDAO.deleteUserById(1);
+            userDAO.deleteUserById(4);
             System.out.println("Deleted user with ID 1");
 
             // Test saving and retrieving tickets
@@ -97,15 +103,28 @@ public class TicketService implements Shareable {
             ticketDAO.saveTicket(ticket);
             System.out.println("Saved new ticket for user ID: " + ticket.getUserId());
 
-            Ticket fetchedTicket = ticketDAO.fetchTicketById(1);
+            // Fetch the ticket to verify it was saved correctly
+            Ticket fetchedTicket = ticketDAO.fetchTicketById(19); // Ensure you fetch by the correct ID
             if (fetchedTicket != null) {
-                System.out.println("Fetched ticket for user ID: " + fetchedTicket.getUserId());
+                System.out.println("Fetched ticket for user ID: " + fetchedTicket.getUserId() + " with type: " + fetchedTicket.getTicketType());
             }
 
-            ticketDAO.updateTicketType(3, TicketType.MONTH);
+//             Update the ticket type for the saved ticket
+            ticketDAO.updateTicketType(19, TicketType.MONTH);
             System.out.println("Updated ticket type for ticket ID 3");
-        } catch (SQLException e) {
+
+//             Fetch the updated ticket to verify the change
+            Ticket updatedTicket = ticketDAO.fetchTicketById(3);
+            if (updatedTicket != null) {
+                System.out.println("Updated ticket type for user ID: " + updatedTicket.getUserId() + " is now: " + updatedTicket.getTicketType());
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error during database operations: " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            // No need to close UserDAO or TicketDAO explicitly
+            // As the EntityManagerFactory is managed within the DAO classes
         }
     }
 

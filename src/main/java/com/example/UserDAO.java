@@ -1,55 +1,56 @@
 package com.example;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 public class UserDAO {
-    private static final String SAVE_USER_SQL= "INSERT INTO app_user(name, role) VALUES (?, ?)";
-    private static final String FETCH_USER_SQL= "SELECT * FROM app_user WHERE id=?";
-    private static final String DELETE_USER_SQL = "DELETE FROM app_user WHERE id = ?";
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("my_persistence");
 
-    public void saveUser(User user) throws SQLException {
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SAVE_USER_SQL)) {
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getRole());  // Save role (admin/client)
-            stmt.executeUpdate();
+    // Method to save a new user
+    public void saveUser(User user) {
+
+
+        try(EntityManager em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+            em.persist(user);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+
+            System.err.println("Error occurred during the transaction: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    public User fetchUserById(int id) throws SQLException {
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(FETCH_USER_SQL)) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String role = rs.getString("role");
-                String name = rs.getString("name");
-                int userId = rs.getInt("id");
-
-                if ("admin".equals(role)) {
-                    return new Admin(name, userId);
-                } else if ("client".equals(role)) {
-                    return new Client(name, userId);
-                }
-            }
+    // Method to fetch a user by ID
+    public User fetchUserById(int id) {
+        EntityManager em = emf.createEntityManager();
+        User user = null;
+        try {
+            user = em.find(UserBase.class, id); // Fetch user by ID
+        } finally {
+            em.close();
         }
-        return null;
+        return user;
     }
-    public void deleteUserById(int id) throws SQLException {
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(DELETE_USER_SQL)) {
-            stmt.setInt(1, id);
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
+
+    // Method to delete a user by ID
+    public void deleteUserById(int id) {
+
+        try(EntityManager em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+            User user = em.find(UserBase.class, id); // Fetch user to delete
+            if (user != null) {
+                em.remove(user); // Use remove to delete the user object
+                em.getTransaction().commit();
                 System.out.println("User with ID " + id + " was deleted successfully.");
             } else {
                 System.out.println("No user found with ID " + id);
+                em.getTransaction().rollback();
             }
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
     }
-
-
 }

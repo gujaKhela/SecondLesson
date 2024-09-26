@@ -1,20 +1,15 @@
 package com.example;
 
-public class Client implements User {
-    private String name;
-    private int id;
+import jakarta.persistence.*;
 
+@Entity
+@DiscriminatorValue("client")
+public class Client extends UserBase {
 
-    public Client(String name, int id) {
-        this.name=name;
-        this.id=id;
-    }
+    public Client() {}
 
-    public Client() {};
-
-    @Override
-    public String getName() {
-        return name;
+    public Client(String name) {
+        super(name);
     }
 
     @Override
@@ -31,7 +26,7 @@ public class Client implements User {
         System.out.println("Client: Getting ticket.");
     }
 
-    public Ticket getTicket(TicketService service, String ticketId ) {
+    public Ticket getTicket(TicketService service, String ticketId) {
         Ticket ticket = service.returnTicketById(ticketId);
         if (ticket != null) {
             System.out.println("Client: Retrieved ticket with ID " + ticketId);

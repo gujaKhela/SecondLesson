@@ -1,27 +1,15 @@
 package com.example;
 
+import jakarta.persistence.*;
 
-public class Admin implements User {
+@Entity
+@DiscriminatorValue("admin")
+public class Admin extends UserBase {
 
-    private String name;
-    private int id;
+    public Admin() {}
 
-
-    public Admin(String name, int id) {
-        this.name=name;
-        this.id=id;
-    }
-
-    public Admin() {};
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getRole() {
-        return "admin";
+    public Admin(String name) {
+        super(name);
     }
 
     @Override
@@ -29,11 +17,16 @@ public class Admin implements User {
         System.out.println("I am an admin");
     }
 
+    @Override
+    public String getRole() {
+        return "admin";
+    }
+
     public boolean checkTicket(Ticket ticket) {
-        if(ticket.getEventCode() != null && !ticket.getEventCode().isEmpty()) {
+        if (ticket.getEventCode() != null && !ticket.getEventCode().isEmpty()) {
             System.out.println("Admin: Ticket is valid.");
             return true;
-        }else {
+        } else {
             System.out.println("Admin: Ticket is invalid.");
             return false;
         }
