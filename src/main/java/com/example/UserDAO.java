@@ -33,9 +33,9 @@ public class UserDAO {
         try {
             user = em.find(UserBase.class, id); // Fetch user by ID
         } finally {
-            em.close(); // Ensure EntityManager is closed
+            em.close();
         }
-        return user; // Return the fetched user
+        return user;
     }
 
     // Method to delete a user by ID
@@ -59,7 +59,7 @@ public class UserDAO {
             }
             e.printStackTrace();
         } finally {
-            em.close(); // Ensure EntityManager is closed
+            em.close();
         }
     }
 }

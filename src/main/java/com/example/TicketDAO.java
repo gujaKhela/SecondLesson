@@ -32,11 +32,11 @@ public class TicketDAO {
         EntityManager em = emf.createEntityManager();
         Ticket ticket = null;
         try {
-            ticket = em.find(Ticket.class, id); // Fetch ticket by ID
+            ticket = em.find(Ticket.class, id);
         } finally {
-            em.close(); // Ensure EntityManager is closed
+            em.close();
         }
-        return ticket; // Return the fetched ticket
+        return ticket;
     }
 
     // Method to update the ticket type in the database
@@ -49,21 +49,21 @@ public class TicketDAO {
 
             if (ticket != null) {
                 System.out.println("Current ticket type before update: " + ticket.getTicketType());
-                ticket.setTicketType(newTicketType); // Update the ticket type
-                em.merge(ticket); // Merge the modified ticket to persist changes
-                em.getTransaction().commit(); // Commit the transaction
+                ticket.setTicketType(newTicketType);
+                em.merge(ticket);
+                em.getTransaction().commit();
                 System.out.println("Updated ticket type to: " + newTicketType);
             } else {
                 System.out.println("No ticket found with ID: " + ticketId);
-                em.getTransaction().rollback(); // Rollback if no ticket found
+                em.getTransaction().rollback();
             }
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback in case of error
+                em.getTransaction().rollback();
             }
-            e.printStackTrace(); // Handle exception
+            e.printStackTrace();
         } finally {
-            em.close(); // Ensure EntityManager is closed
+            em.close();
         }
     }
 }

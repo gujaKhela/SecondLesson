@@ -3,7 +3,7 @@ package com.example;
 import jakarta.persistence.*;
 
 @Entity
-@DiscriminatorValue("client")  // This value will be stored in the "role" column for Clients
+@DiscriminatorValue("client")
 public class Client extends UserBase {
 
     public Client() {}

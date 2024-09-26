@@ -4,9 +4,9 @@ package com.example;
 import jakarta.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)  // Single table strategy
-@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)  // Column to differentiate between Admin and Client
-@Table(name = "app_user")  // The table for all users
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
+@Table(name = "app_user")
 public abstract class UserBase implements User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +31,5 @@ public abstract class UserBase implements User {
     public int getId() {
         return id;
     }
-
 
 }

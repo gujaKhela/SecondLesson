@@ -3,7 +3,7 @@ package com.example;
 import jakarta.persistence.*;
 
 @Entity
-@DiscriminatorValue("admin")  // This value will be stored in the "role" column for Admins
+@DiscriminatorValue("admin")
 public class Admin extends UserBase {
 
     public Admin() {}
