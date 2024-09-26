@@ -1,55 +1,65 @@
 package com.example;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 public class UserDAO {
-    private static final String SAVE_USER_SQL= "INSERT INTO app_user(name, role) VALUES (?, ?)";
-    private static final String FETCH_USER_SQL= "SELECT * FROM app_user WHERE id=?";
-    private static final String DELETE_USER_SQL = "DELETE FROM app_user WHERE id = ?";
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("my_persistence");
 
-    public void saveUser(User user) throws SQLException {
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SAVE_USER_SQL)) {
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getRole());  // Save role (admin/client)
-            stmt.executeUpdate();
-        }
-    }
+    // Method to save a new user
+    public void saveUser(User user) {
+        EntityManager em = emf.createEntityManager();
 
-    public User fetchUserById(int id) throws SQLException {
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(FETCH_USER_SQL)) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String role = rs.getString("role");
-                String name = rs.getString("name");
-                int userId = rs.getInt("id");
-
-                if ("admin".equals(role)) {
-                    return new Admin(name, userId);
-                } else if ("client".equals(role)) {
-                    return new Client(name, userId);
-                }
+        try {
+            em.getTransaction().begin();
+            em.persist(user);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
+            System.err.println("Error occurred during the transaction: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            em.close();
         }
-        return null;
     }
-    public void deleteUserById(int id) throws SQLException {
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(DELETE_USER_SQL)) {
-            stmt.setInt(1, id);
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
+
+    // Method to fetch a user by ID
+    public User fetchUserById(int id) {
+        EntityManager em = emf.createEntityManager();
+        User user = null;
+        try {
+            user = em.find(UserBase.class, id); // Fetch user by ID
+        } finally {
+            em.close(); // Ensure EntityManager is closed
+        }
+        return user; // Return the fetched user
+    }
+
+    // Method to delete a user by ID
+    public void deleteUserById(int id) {
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+            User user = em.find(UserBase.class, id); // Fetch user to delete
+            if (user != null) {
+                em.remove(user); // Use remove to delete the user object
+                em.getTransaction().commit();
                 System.out.println("User with ID " + id + " was deleted successfully.");
             } else {
                 System.out.println("No user found with ID " + id);
+                em.getTransaction().rollback();
             }
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Rollback if something goes wrong
+            }
+            e.printStackTrace();
+        } finally {
+            em.close(); // Ensure EntityManager is closed
         }
     }
-
-
 }
