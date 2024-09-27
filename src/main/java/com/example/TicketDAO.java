@@ -16,10 +16,8 @@ public class TicketDAO {
             em.getTransaction().commit();
             System.out.println("Saved new ticket for user ID: " + ticket.getUserId() + " with type: " + ticket.getTicketType());
         } catch (Exception e) {
-            {
                 System.err.println("Error saving ticket: " + e.getMessage());
                 e.printStackTrace();
-            }
         }
     }
 
