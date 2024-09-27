@@ -38,10 +38,9 @@ public class Ticket extends Identifiable {
 
 
     public Ticket() {
-        this.creationDate = new Timestamp(System.currentTimeMillis());
         NullableWarningChecker.check(this);
+        this.creationDate = new Timestamp(System.currentTimeMillis());
     }
-
 
     public Ticket(String id, String concertHall, String eventCode, long time, boolean isPromo, char stadiumSector, double maxBackpackWeight, double price) {
         this(concertHall, eventCode, time);

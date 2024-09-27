@@ -1,6 +1,5 @@
 package com.example;
 
-
 import jakarta.persistence.*;
 
 @Entity
@@ -14,8 +13,6 @@ public abstract class UserBase implements User {
 
     @Column(name = "name", nullable = false)
     private String name;
-
-    // Constructors, Getters, Setters
 
     public UserBase() {}
 

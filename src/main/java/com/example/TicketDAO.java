@@ -10,8 +10,6 @@ public class TicketDAO {
 
     // Method to save a ticket to the database
     public void saveTicket(Ticket ticket) {
-        //EntityManager em = emf.createEntityManager();
-
         try(EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             em.persist(ticket);
@@ -36,7 +34,6 @@ public class TicketDAO {
 
     // Method to update the ticket type in the database
     public void updateTicketType(int ticketId, TicketType newTicketType) {
-
 
         try(EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();

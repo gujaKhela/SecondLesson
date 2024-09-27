@@ -10,7 +10,6 @@ public class UserDAO {
     // Method to save a new user
     public void saveUser(User user) {
 
-
         try(EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             em.persist(user);
