@@ -18,14 +18,20 @@ import javax.sql.DataSource;
     @EnableJpaRepositories(basePackages = "com.example")
     @ComponentScan(basePackages = "com.example") // Tells Spring to scan the 'org.example' package for beans
     public class AppConfig {
+        private static final String DRIVER_CLASS_NAME= "org.postgresql.Driver";
+        private static final String DATABASE_URL = "jdbc:postgresql://localhost:5432/my_ticket_service_db";
+        private static final String DATABASE_USERNAME= "postgres";
+        private static final String DATABASE_PASSWORD= "1996";
+
+        private static final String PACKAGE_TO_SCAN = "com.example";
 
         @Bean
         public DataSource dataSource() {
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setDriverClassName("org.postgresql.Driver");
-            dataSource.setUrl("jdbc:postgresql://localhost:5432/my_ticket_service_db");
-            dataSource.setUsername("postgres");
-            dataSource.setPassword("1996");
+            dataSource.setDriverClassName(DRIVER_CLASS_NAME);
+            dataSource.setUrl(DATABASE_URL);
+            dataSource.setUsername(DATABASE_USERNAME);
+            dataSource.setPassword(DATABASE_PASSWORD);
             return dataSource;
         }
 
@@ -33,7 +39,7 @@ import javax.sql.DataSource;
         public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
             LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
             em.setDataSource(dataSource());
-            em.setPackagesToScan("com.example");
+            em.setPackagesToScan(PACKAGE_TO_SCAN);
             em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
             return em;
         }
