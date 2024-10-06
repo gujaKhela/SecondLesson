@@ -29,4 +29,7 @@ public abstract class UserBase implements User {
         return id;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }

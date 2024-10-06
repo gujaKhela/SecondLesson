@@ -2,6 +2,7 @@ package com.example;
 
 import org.hibernate.HibernateException;
 import org.hibernate.sql.Update;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class TicketService implements Shareable {
     public static void main(String[] args) {
         TicketService service = new TicketService();
         service.run();
+
     }
 
     private void run() {
@@ -74,60 +76,48 @@ public class TicketService implements Shareable {
     }
 
     private void handleDatabaseOperations() {
-        UserDAO userDAO = null;
-        TicketDAO ticketDAO = null;
-
-        try {
-            userDAO = new UserDAO();
-            ticketDAO = new TicketDAO();
+        try (var context = new AnnotationConfigApplicationContext(AppConfig.class)) {
+            UserServiceRepo userServiceRepo = context.getBean(UserServiceRepo.class);
+            TicketServiceRepo ticketServiceRepo = context.getBean(TicketServiceRepo.class);
 
             // Test saving and retrieving users
-            User client = new Client("guja");
-            userDAO.saveUser(client);
+            UserBase client = new Client("Client1");
+            userServiceRepo.saveUser(client);
             System.out.println("Saved new client: " + client.getName());
 
-            User admin = new Admin("guja 2");
-            userDAO.saveUser(admin);
+            UserBase admin = new Admin("Admin1");
+            userServiceRepo.saveUser(admin);
             System.out.println("Saved new admin: " + admin.getName());
 
-            User fetchedUser = userDAO.fetchUserById(4);
+            User fetchedUser = userServiceRepo.fetchUserById(4);
             if (fetchedUser != null) {
                 System.out.println("Fetched user: " + fetchedUser.getName() + " with role: " + fetchedUser.getRole());
             }
-
-            userDAO.deleteUserById(4);
-            System.out.println("Deleted user with ID 1");
+            userServiceRepo.deleteUserById(4);
+            System.out.println("Deleted user with ID 4");
 
             // Test saving and retrieving tickets
             Ticket ticket = new Ticket(3, TicketType.DAY);
-            ticketDAO.saveTicket(ticket);
+            ticketServiceRepo.saveTicket(ticket);
             System.out.println("Saved new ticket for user ID: " + ticket.getUserId());
 
             // Fetch the ticket to verify it was saved correctly
-            Ticket fetchedTicket = ticketDAO.fetchTicketById(19); // Ensure you fetch by the correct ID
+            Ticket fetchedTicket = ticketServiceRepo.fetchTicketById(3); // Ensure you fetch by the correct ID
             if (fetchedTicket != null) {
                 System.out.println("Fetched ticket for user ID: " + fetchedTicket.getUserId() + " with type: " + fetchedTicket.getTicketType());
             }
 
-//             Update the ticket type for the saved ticket
-            ticketDAO.updateTicketType(19, TicketType.MONTH);
+            // Update the ticket type for the saved ticket
+            ticketServiceRepo.updateTicketType(3, TicketType.MONTH);
             System.out.println("Updated ticket type for ticket ID 3");
 
-//             Fetch the updated ticket to verify the change
-            Ticket updatedTicket = ticketDAO.fetchTicketById(3);
+            // Fetch the updated ticket to verify the change
+            Ticket updatedTicket = ticketServiceRepo.fetchTicketById(3);
             if (updatedTicket != null) {
                 System.out.println("Updated ticket type for user ID: " + updatedTicket.getUserId() + " is now: " + updatedTicket.getTicketType());
             }
-
-        } catch (Exception e) {
-            System.err.println("Error during database operations: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            // No need to close UserDAO or TicketDAO explicitly
-            // As the EntityManagerFactory is managed within the DAO classes
         }
     }
-
     private void retrieveTicketsBySector(char stadiumSector) {
         List<Ticket> foundTickets = getTicketsByStadiumSector(stadiumSector);
         if (!foundTickets.isEmpty()) {
