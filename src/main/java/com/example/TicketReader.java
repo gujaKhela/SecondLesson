@@ -1,5 +1,4 @@
 package com.example;
-import com.example.BusTicket;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -47,7 +46,6 @@ public class TicketReader {
                         }
                     }
 
-                    // Parse startDate only if it's not null or empty
                     LocalDate startDate = null;
                     if (startDateStr != null && !startDateStr.isEmpty()) {
                         try {
@@ -57,7 +55,6 @@ public class TicketReader {
                         }
                     }
 
-                    // Create and add the BusTicket object
                     BusTicket ticket = new BusTicket(ticketClass, ticketType, startDate, price);
                     tickets.add(ticket);
                 } else {

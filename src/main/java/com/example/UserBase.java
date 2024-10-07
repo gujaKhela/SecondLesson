@@ -1,6 +1,9 @@
 package com.example;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -14,10 +17,17 @@ public abstract class UserBase implements User {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    private List<Ticket> tickets = new ArrayList<>();
+
+    @Column(name = "status", nullable = false)
+    private String status;
+
     public UserBase() {}
 
     public UserBase(String name) {
         this.name = name;
+        this.status = "DEACTIVATED";
     }
 
     @Override
@@ -31,5 +41,27 @@ public abstract class UserBase implements User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<Ticket> getTicket() {
+        return this.tickets;
+    }
+
+    public void addTicket(Ticket ticket) {
+        tickets.add(ticket);
+        ticket.setUser(this);
+    }
+
+    public void removeTicket(Ticket ticket) {
+        tickets.remove(ticket);
+        ticket.setUser(null);
     }
 }
