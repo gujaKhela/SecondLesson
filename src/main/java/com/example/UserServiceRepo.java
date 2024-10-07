@@ -26,15 +26,15 @@ public class UserServiceRepo {
     public void addTicketToUser(int userId, Ticket ticket) {
         UserBase user = userRepository.findById(userId).orElse(null);
         if (user != null) {
-            user.addTicket(ticket); // Add the ticket to the user
-            userRepository.save(user); // Save the updated user with the new ticket
+            user.addTicket(ticket);
+            userRepository.save(user);
         }
     }
 
     public UserBase fetchUserById(int id) {
         Optional<UserBase> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
-            return userOptional.get();  // This might return a Client or Admin instance
+            return userOptional.get();
         } else {
             throw new RuntimeException("User with ID " + id + " not found.");
         }
@@ -59,14 +59,13 @@ public class UserServiceRepo {
         }
     }
 
-    // New method to activate user and create a ticket
     @Transactional
     public void activateUserAndCreateTicket(int userId, Ticket ticket) {
         UserBase user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found")); // Optional: throw an exception if not found
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setStatus("ACTIVATED"); // Update the user status
-        user.addTicket(ticket); // Add ticket to user and set user for the ticket
-        userRepository.save(user); // Save the user, tickets are automatically persisted due to Cascade.ALL
+        user.setStatus("ACTIVATED");
+        user.addTicket(ticket);
+        userRepository.save(user);
     }
 }

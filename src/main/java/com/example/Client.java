@@ -24,7 +24,7 @@ public class Client extends UserBase {
 
     @Override
     public void addTicket(Ticket ticket) {
-        super.addTicket(ticket); // Use the superclass method to add the ticket to the user
+        super.addTicket(ticket);
     }
 
     public Ticket getTicket(TicketService service, String ticketId) {

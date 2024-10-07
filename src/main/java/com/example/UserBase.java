@@ -61,7 +61,7 @@ public abstract class UserBase implements User {
     }
 
     public void removeTicket(Ticket ticket) {
-        tickets.remove(ticket); // Remove ticket from the list
-        ticket.setUser(null); // Remove the user association
+        tickets.remove(ticket);
+        ticket.setUser(null);
     }
 }
