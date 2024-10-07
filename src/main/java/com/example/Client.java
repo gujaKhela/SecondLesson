@@ -22,8 +22,9 @@ public class Client extends UserBase {
         return "client";
     }
 
-    public void getTicket() {
-        System.out.println("Client: Getting ticket.");
+    @Override
+    public void addTicket(Ticket ticket) {
+        super.addTicket(ticket); // Use the superclass method to add the ticket to the user
     }
 
     public Ticket getTicket(TicketService service, String ticketId) {
@@ -31,7 +32,7 @@ public class Client extends UserBase {
         if (ticket != null) {
             System.out.println("Client: Retrieved ticket with ID " + ticketId);
         } else {
-            System.out.println("Client: Ticket with ID " + ticketId + " not found.");
+            System.out.println("Client: Ticket with ID " + ticketId + "not found.");
         }
         return ticket;
     }

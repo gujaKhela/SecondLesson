@@ -17,8 +17,9 @@ public class Ticket extends Identifiable {
     @Column(name = "ticket_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private TicketType ticketType;
-    @Column(name = "user_id")
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserBase user;
 
     @Transient
     private long time;
@@ -53,7 +54,6 @@ public class Ticket extends Identifiable {
     public Ticket(int userId, TicketType ticketType) {
         this();
         this.ticketType = ticketType;
-        this.userId = userId;
         if (ticketType == null) {
             throw new IllegalArgumentException("Ticket type cannot be null.");
         }
@@ -64,6 +64,10 @@ public class Ticket extends Identifiable {
         setConcertHall(concertHall);
         setEventCode(eventCode);
         setTime(time);
+    }
+
+    public int getTicketId() {
+        return id;
     }
 
     public TicketType getTicketType() {
@@ -78,12 +82,12 @@ public class Ticket extends Identifiable {
         return creationDate;
     }
 
-    public int getUserId() {
-        return userId;
+    public UserBase getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(UserBase user) {
+        this.user = user;
     }
 
 
@@ -197,5 +201,6 @@ public class Ticket extends Identifiable {
     public String getTicketDetails() {
         return this.toString();
     }
+
 
 }

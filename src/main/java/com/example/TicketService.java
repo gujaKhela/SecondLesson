@@ -1,14 +1,14 @@
 package com.example;
 
-import org.hibernate.HibernateException;
-import org.hibernate.sql.Update;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TicketService implements Shareable {
+
 
     private Ticket[] storageOfTickets = new Ticket[10];
 
@@ -25,6 +25,14 @@ public class TicketService implements Shareable {
         demonstrateUserFunctionality();
         handleDatabaseOperations();
         retrieveTicketsBySector('A');
+        BusTicketFromJSON();
+    }
+
+
+    private void BusTicketFromJSON() {
+        TicketServiceJSON ticketService = new TicketServiceJSON();
+        List<BusTicket> tickets = ticketService.loadTicketsFromJson();
+        tickets.forEach(System.out::println);
     }
 
     private void validateBusTickets() {
@@ -85,39 +93,64 @@ public class TicketService implements Shareable {
             userServiceRepo.saveUser(client);
             System.out.println("Saved new client: " + client.getName());
 
-            UserBase admin = new Admin("Admin1");
+            userServiceRepo.activateUserAndCreateTicket(client.getId(), new Ticket(client.getId(), TicketType.YEAR));
+
+            UserBase admin = new Admin("shesacveliliaaaaaaa");
             userServiceRepo.saveUser(admin);
             System.out.println("Saved new admin: " + admin.getName());
 
-            User fetchedUser = userServiceRepo.fetchUserById(4);
+            userServiceRepo.updateUser(admin.getId(), new Client("someone"));
+
+
+            User fetchedUser = userServiceRepo.fetchUserById(120);
             if (fetchedUser != null) {
                 System.out.println("Fetched user: " + fetchedUser.getName() + " with role: " + fetchedUser.getRole());
             }
-            userServiceRepo.deleteUserById(4);
-            System.out.println("Deleted user with ID 4");
+
+            userServiceRepo.deleteUserById(118);
+            System.out.println("Deleted user with ID 118");
 
             // Test saving and retrieving tickets
             Ticket ticket = new Ticket(3, TicketType.DAY);
             ticketServiceRepo.saveTicket(ticket);
-            System.out.println("Saved new ticket for user ID: " + ticket.getUserId());
+            System.out.println("Saved new ticket for user ID: " + ticket.getUser());
 
             // Fetch the ticket to verify it was saved correctly
             Ticket fetchedTicket = ticketServiceRepo.fetchTicketById(3); // Ensure you fetch by the correct ID
             if (fetchedTicket != null) {
-                System.out.println("Fetched ticket for user ID: " + fetchedTicket.getUserId() + " with type: " + fetchedTicket.getTicketType());
+                System.out.println("Fetched ticket for user ID: " + fetchedTicket.getUser() + " with type: " + fetchedTicket.getTicketType());
+            }
+
+
+            // Test saving and retrieving tickets associated with users
+            Ticket ticketll = new Ticket();
+            ticket.setTicketType(TicketType.DAY);
+            ticket.setUser(client);  // Associate the ticket with the user
+            ticketServiceRepo.saveTicket(ticket);
+            System.out.println("Saved new ticket for user: " + ticket.getUser().getName());
+
+            // Fetch the ticket to verify it was saved correctly
+            Ticket fetchedTicketByIdTicket = ticketServiceRepo.fetchTicketById(ticket.getTicketId());
+            if (fetchedTicket != null) {
+                System.out.println("Fetched ticket for user: " + fetchedTicket.getUser().getName() + " with type: " + fetchedTicketByIdTicket.getTicketType());
             }
 
             // Update the ticket type for the saved ticket
-            ticketServiceRepo.updateTicketType(3, TicketType.MONTH);
-            System.out.println("Updated ticket type for ticket ID 3");
+            ticketServiceRepo.updateTicketType(34, TicketType.MONTH);
+            System.out.println("Updated ticket type for ticket ID 10");
 
             // Fetch the updated ticket to verify the change
-            Ticket updatedTicket = ticketServiceRepo.fetchTicketById(3);
+            Ticket updatedTicket = ticketServiceRepo.fetchTicketById(34);
             if (updatedTicket != null) {
-                System.out.println("Updated ticket type for user ID: " + updatedTicket.getUserId() + " is now: " + updatedTicket.getTicketType());
+                System.out.println("Updated ticket type for user ID: " + updatedTicket.getUser() + " is now: " + updatedTicket.getTicketType());
             }
+
+
         }
     }
+
+
+
     private void retrieveTicketsBySector(char stadiumSector) {
         List<Ticket> foundTickets = getTicketsByStadiumSector(stadiumSector);
         if (!foundTickets.isEmpty()) {
@@ -156,3 +189,4 @@ public class TicketService implements Shareable {
         System.out.println("Ticket shared via phone and email: " + phone + ", " + email);
     }
 }
+
