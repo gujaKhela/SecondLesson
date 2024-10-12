@@ -1,9 +1,7 @@
 package com.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +20,6 @@ public class TicketService implements Shareable {
 
     private Ticket[] storageOfTickets = new Ticket[10];
 
-
     public void run() {
         validateBusTickets();
         initializeTickets();
@@ -38,6 +35,15 @@ public class TicketService implements Shareable {
         List<BusTicket> tickets = ticketService.loadTicketsFromJson();
         tickets.forEach(System.out::println);
     }
+
+    public Ticket getTicketById(int id) {
+        Ticket ticket = ticketServiceRepo.fetchTicketById(id);
+        if (ticket == null) {
+            throw new TicketNotFoundException("Ticket with ID " + id + " not found.");
+        }
+        return ticket;
+    }
+
 
     private void validateBusTickets() {
         TicketReader reader = new TicketReader();
