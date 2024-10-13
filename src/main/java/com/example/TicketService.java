@@ -1,24 +1,26 @@
 package com.example;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class TicketService implements Shareable {
 
+    @Autowired
+    private TicketServiceRepo ticketServiceRepo;
+
+    @Autowired
+    private  UserServiceRepo userServiceRepo;
+
+    @Autowired
+    private TicketServiceJSON ticketServiceJSON;
 
     private Ticket[] storageOfTickets = new Ticket[10];
 
-    public static void main(String[] args) {
-        TicketService service = new TicketService();
-        service.run();
-
-    }
-
-    private void run() {
+    public void run() {
         validateBusTickets();
         initializeTickets();
         shareTicket();
@@ -28,12 +30,20 @@ public class TicketService implements Shareable {
         BusTicketFromJSON();
     }
 
-
     private void BusTicketFromJSON() {
         TicketServiceJSON ticketService = new TicketServiceJSON();
         List<BusTicket> tickets = ticketService.loadTicketsFromJson();
         tickets.forEach(System.out::println);
     }
+
+    public Ticket getTicketById(int id) {
+        Ticket ticket = ticketServiceRepo.fetchTicketById(id);
+        if (ticket == null) {
+            throw new TicketNotFoundException("Ticket with ID " + id + " not found.");
+        }
+        return ticket;
+    }
+
 
     private void validateBusTickets() {
         TicketReader reader = new TicketReader();
@@ -84,11 +94,7 @@ public class TicketService implements Shareable {
     }
 
     private void handleDatabaseOperations() {
-        try (var context = new AnnotationConfigApplicationContext(AppConfig.class)) {
-            UserServiceRepo userServiceRepo = context.getBean(UserServiceRepo.class);
-            TicketServiceRepo ticketServiceRepo = context.getBean(TicketServiceRepo.class);
 
-            // Test saving and retrieving users
             UserBase client = new Client("Client1");
             userServiceRepo.saveUser(client);
             System.out.println("Saved new client: " + client.getName());
@@ -101,7 +107,6 @@ public class TicketService implements Shareable {
 
             userServiceRepo.updateUser(admin.getId(), new Client("someone"));
 
-
             User fetchedUser = userServiceRepo.fetchUserById(120);
             if (fetchedUser != null) {
                 System.out.println("Fetched user: " + fetchedUser.getName() + " with role: " + fetchedUser.getRole());
@@ -110,43 +115,34 @@ public class TicketService implements Shareable {
             userServiceRepo.deleteUserById(118);
             System.out.println("Deleted user with ID 118");
 
-            // Test saving and retrieving tickets
             Ticket ticket = new Ticket(3, TicketType.DAY);
             ticketServiceRepo.saveTicket(ticket);
             System.out.println("Saved new ticket for user ID: " + ticket.getUser());
 
-            // Fetch the ticket to verify it was saved correctly
             Ticket fetchedTicket = ticketServiceRepo.fetchTicketById(3); // Ensure you fetch by the correct ID
             if (fetchedTicket != null) {
                 System.out.println("Fetched ticket for user ID: " + fetchedTicket.getUser() + " with type: " + fetchedTicket.getTicketType());
             }
 
-
-            // Test saving and retrieving tickets associated with users
             Ticket ticketll = new Ticket();
             ticket.setTicketType(TicketType.DAY);
             ticket.setUser(client);  // Associate the ticket with the user
             ticketServiceRepo.saveTicket(ticket);
             System.out.println("Saved new ticket for user: " + ticket.getUser().getName());
 
-            // Fetch the ticket to verify it was saved correctly
             Ticket fetchedTicketByIdTicket = ticketServiceRepo.fetchTicketById(ticket.getTicketId());
             if (fetchedTicket != null) {
                 System.out.println("Fetched ticket for user: " + fetchedTicket.getUser().getName() + " with type: " + fetchedTicketByIdTicket.getTicketType());
             }
 
-            // Update the ticket type for the saved ticket
             ticketServiceRepo.updateTicketType(34, TicketType.MONTH);
             System.out.println("Updated ticket type for ticket ID 10");
 
-            // Fetch the updated ticket to verify the change
             Ticket updatedTicket = ticketServiceRepo.fetchTicketById(34);
             if (updatedTicket != null) {
                 System.out.println("Updated ticket type for user ID: " + updatedTicket.getUser() + " is now: " + updatedTicket.getTicketType());
             }
 
-
-        }
     }
 
 

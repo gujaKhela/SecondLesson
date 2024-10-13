@@ -2,6 +2,8 @@ package com.example;
 
 import java.sql.Timestamp;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -19,6 +21,7 @@ public class Ticket extends Identifiable {
     private TicketType ticketType;
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private UserBase user;
 
     @Transient
