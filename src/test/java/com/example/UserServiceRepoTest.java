@@ -33,14 +33,14 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void saveUser_positiveCase() {
+    void saveUser_success() {
         UserBase user = new Client("John");
         userServiceRepo.saveUser(user);
         verify(userRepository, times(1)).save(user);
     }
 
     @Test
-    void saveUser_negativeCase() {
+    void saveUser_failure() {
         doThrow(new RuntimeException("Error saving user")).when(userRepository).save(any(UserBase.class));
         assertThrows(RuntimeException.class, () -> {
             userServiceRepo.saveUser(new Client("John"));
@@ -48,14 +48,14 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void saveUser_cornerCase() {
+    void saveUser_withNullName() {
         UserBase user = new Client(null);
         userServiceRepo.saveUser(user);
         verify(userRepository, times(1)).save(user);
     }
 
     @Test
-    void addTicketToUser_positiveCase() {
+    void addTicketToUser_success() {
         UserBase user = new Client("John");
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
@@ -66,7 +66,7 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void addTicketToUser_negativeCase() {
+    void addTicketToUser_userNotFound() {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         Ticket ticket = new Ticket();
@@ -76,7 +76,7 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void addTicketToUser_cornerCase() {
+    void addTicketToUser_withNullTicket() {
         UserBase user = new Client("John");
         when(userRepository.findById(25)).thenReturn(Optional.of(user));
         Ticket ticket = null;
@@ -85,7 +85,7 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void fetchUserById_positiveCase() {
+    void fetchUserById_success() {
         UserBase user = new Client("John");
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
@@ -95,7 +95,7 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void fetchUserById_negativeCase() {
+    void fetchUserById_userNotFound() {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
@@ -105,7 +105,7 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void fetchUserById_cornerCase() {
+    void fetchUserById_withInvalidId() {
         Exception exception = assertThrows(RuntimeException.class, () -> {
             userServiceRepo.fetchUserById(-1);
         });
@@ -113,19 +113,19 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void deleteUserById_positiveCase() {
+    void deleteUserById_success() {
         userServiceRepo.deleteUserById(1);
         verify(userRepository, times(1)).deleteById(1);
     }
 
     @Test
-    void deleteUserById_negativeCase() {
+    void deleteUserById_failure() {
         doThrow(new RuntimeException("Error deleting user")).when(userRepository).deleteById(1);
         assertThrows(RuntimeException.class, () -> userServiceRepo.deleteUserById(1));
     }
 
     @Test
-    void deleteUserById_cornerCase() {
+    void deleteUserById_nonExistentUser() {
         // Deleting non-existing user
         doNothing().when(userRepository).deleteById(100);
         userServiceRepo.deleteUserById(100);
@@ -133,7 +133,7 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void fetchAllUsers_positiveCase() {
+    void fetchAllUsers_success() {
         when(userRepository.findAll()).thenReturn(List.of(new Client("John"), new Admin("Admin")));
 
         List<UserBase> users = userServiceRepo.fetchAllUsers();
@@ -141,21 +141,21 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void fetchAllUsers_negativeCase() {
+    void fetchAllUsers_emptyList() {
         when(userRepository.findAll()).thenReturn(List.of());
         List<UserBase> users = userServiceRepo.fetchAllUsers();
         assertTrue(users.isEmpty());
     }
 
     @Test
-    void fetchAllUsers_cornerCase() {
-        when(userRepository.findAll()).thenReturn(List.of());
+    void fetchAllUsers_nullCase() {
+        when(userRepository.findAll()).thenReturn(null);
         List<UserBase> users = userServiceRepo.fetchAllUsers();
-        assertTrue(users.isEmpty());
+        assertNull(users);
     }
 
     @Test
-    void updateUser_positiveCase() {
+    void updateUser_success() {
         when(userRepository.findById(1)).thenReturn(Optional.of(new Client("John")));
         when(userRepository.save(any(UserBase.class))).thenReturn(null);
 
@@ -164,7 +164,7 @@ class UserServiceRepoTest {
     }
 
     @Test
-    void updateUser_negativeCase() {
+    void updateUser_updateDisabled() {
         ReflectionTestUtils.setField(userServiceRepo, "allowUserUpdate", false);
         assertThrows(UnsupportedOperationException.class, () -> {
             userServiceRepo.updateUser(25, new Client("Updated Name"));
@@ -172,9 +172,8 @@ class UserServiceRepoTest {
 
     }
 
-
     @Test
-    void updateUser_cornerCase() {
+    void updateUser_withNullName() {
         when(userRepository.findById(1)).thenReturn(Optional.of(new Client("John")));
         userServiceRepo.updateUser(1, new Client(null));
         verify(userRepository, times(1)).save(any(UserBase.class));
