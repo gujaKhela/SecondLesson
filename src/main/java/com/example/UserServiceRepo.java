@@ -25,9 +25,12 @@ public class UserServiceRepo {
 
     public void addTicketToUser(int userId, Ticket ticket) {
         UserBase user = userRepository.findById(userId).orElse(null);
-        if (user != null) {
+        if (user != null && ticket != null) {
+            ticket.setUser(user);
             user.addTicket(ticket);
             userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("Ticket cannot be null");
         }
     }
 
